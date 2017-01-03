@@ -4,6 +4,7 @@
 #include "cuda.h"
 #include <stdio.h>
 #include <math.h>
+#include "road.c"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -180,7 +181,7 @@ image **load_alphabet()
 void draw_detections(image im, int num, float thresh, box *boxes, float **probs, char **names, image **alphabet, int classes)
 {
     int i;
-
+    int count;
     for(i = 0; i < num; ++i){
         int class = max_index(probs[i], classes);
         float prob = probs[i][class];
@@ -192,8 +193,18 @@ void draw_detections(image im, int num, float thresh, box *boxes, float **probs,
                 width = pow(prob, 1./2.)*10+1;
                 alphabet = 0;
             }
-
+            printf("testing \n");
+	       if (strcmp(names[class],"person") != 1){
+            printf("Person detected \n");
+          
+            road();
+            	
+            }else{
+            printf("ok");
+            }
+            
             printf("%s: %.0f%%\n", names[class], prob*100);
+	      
             int offset = class*123457 % classes;
             float red = get_color(2,offset,classes);
             float green = get_color(1,offset,classes);
@@ -413,7 +424,7 @@ void show_image_cv(image p, const char *name)
 
     IplImage *disp = cvCreateImage(cvSize(p.w,p.h), IPL_DEPTH_8U, p.c);
     int step = disp->widthStep;
-    cvNamedWindow(buff, CV_WINDOW_NORMAL); 
+    cvNamedWindow(buff, CV_WINDOW_NORMAL);
     //cvMoveWindow(buff, 100*(windows%10) + 200*(windows/10), 100*(windows%10));
     ++windows;
     for(y = 0; y < p.h; ++y){

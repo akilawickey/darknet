@@ -113,7 +113,7 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
         printf("video file: %s\n", filename);
         cap = cvCaptureFromFile(filename);
     }else{
-        cap = cvCaptureFromCAM(cam_index);
+        cap = cvCaptureFromCAM(1);
     }
 
     if(!cap) error("Couldn't connect to webcam.\n");
@@ -152,9 +152,9 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
 
     int count = 0;
     if(!prefix){
-        cvNamedWindow("Demo", CV_WINDOW_NORMAL); 
-        cvMoveWindow("Demo", 0, 0);
-        cvResizeWindow("Demo", 1352, 1013);
+        //cvNamedWindow("Demo", CV_WINDOW_NORMAL); 
+        //cvMoveWindow("Demo", 0, 0);
+        //cvResizeWindow("Demo", 1352, 1013);
     }
 
     double before = get_wall_time();
@@ -166,7 +166,7 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
             if(pthread_create(&detect_thread, 0, detect_in_thread, 0)) error("Thread creation failed");
 
             if(!prefix){
-                show_image(disp, "Demo");
+                //show_image(disp, "Demo");
                 int c = cvWaitKey(1);
                 if (c == 10){
                     if(frame_skip == 0) frame_skip = 60;
@@ -177,7 +177,7 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
             }else{
                 char buff[256];
                 sprintf(buff, "%s_%08d", prefix, count);
-                save_image(disp, buff);
+              save_image(disp, buff);
             }
 
             pthread_join(fetch_thread, 0);
